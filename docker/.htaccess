@@ -1,0 +1,10 @@
+# This protects against attempts to exploit the Bash execution bug. We're not
+# susceptible to the attack but this makes it easy to spot the attack and
+# blackhole the source.
+
+RewriteEngine On
+RewriteCond %{QUERY_STRING} ^.*=\(\) [OR]
+RewriteCond %{HTTP_REFERER} ^\(\)\s{ [OR]
+RewriteCond %{HTTP_COOKIE} ^\(\)\s{ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^\(\)\s{
+RewriteRule ^ /var/www/blocked.php [NC,L,E=error-notes:shellshock-exploit]
